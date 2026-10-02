@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lincoln Place Portal · Sunny Advertising</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#FDB600; --gold-soft:#FFF6DC; --gold-ink:#8A6400;
+  --ink:#0A0A0A; --ink-2:#585858; --ink-3:#9E9E9E;
+  --bg:#FBFBFB; --panel:#FFFFFF; --line:#ECECEC; --line-2:#F3F3F3;
+  --red:#C2410C; --red-soft:#FDECE4; --green:#2F7D4F; --green-soft:#E6F3EA;
+  --font:'Poppins',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --gold-soft:#2B2410; --gold-ink:#FDB600;
+    --ink:#F5F5F5; --ink-2:#B5B5B5; --ink-3:#7A7A7A;
+    --bg:#0A0A0A; --panel:#141414; --line:#262626; --line-2:#1C1C1C;
+    --red:#F28B5B; --red-soft:#2A1810; --green:#6FCF97; --green-soft:#11251A;
+  }
+}
+:root[data-theme="dark"]{
+  --gold-soft:#2B2410; --gold-ink:#FDB600;
+  --ink:#F5F5F5; --ink-2:#B5B5B5; --ink-3:#7A7A7A;
+  --bg:#0A0A0A; --panel:#141414; --line:#262626; --line-2:#1C1C1C;
+  --red:#F28B5B; --red-soft:#2A1810; --green:#6FCF97; --green-soft:#11251A;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;height:100%}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100%}
+
+/* Sidebar */
+.side{border-right:1px solid var(--line);background:var(--bg);padding:22px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{padding:0 10px}
+.brand .wm{font-weight:700;font-size:17px;letter-spacing:-.01em}
+.brand .wm span{color:var(--gold)}
+.brand .sub{font-size:12px;color:var(--ink-2);margin-top:2px}
+.navgroup{display:flex;flex-direction:column;gap:2px}
+.navhead{font-size:11.5px;color:var(--ink-3);padding:8px 10px 4px;display:flex;justify-content:space-between;align-items:center}
+.navhead .lock{font-size:10.5px;background:var(--line-2);border:1px solid var(--line);border-radius:999px;padding:0 7px;color:var(--ink-2)}
+.nav{all:unset;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:8px;color:var(--ink);cursor:pointer;font-size:13.5px}
+.nav:hover{background:var(--line-2)}
+.nav.active{background:var(--gold-soft);color:var(--gold-ink);font-weight:600}
+.nav .code{font-size:11px;color:var(--ink-3);font-weight:400}
+.nav.active .code{color:var(--gold-ink)}
+.statehead{font-size:11px;color:var(--ink-3);padding:8px 10px 2px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;margin-left:6px;vertical-align:middle}
+
+/* Main */
+.main{min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 32px;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:5}
+.top h1{font-size:22px;font-weight:600;margin:0;letter-spacing:-.01em}
+.top .crumb{font-size:12.5px;color:var(--ink-2);margin-top:1px}
+.top-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.role{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:6px 12px;color:var(--ink-2)}
+#estSeg{flex-wrap:wrap;max-width:100%}
+.seg button.on{background:var(--gold);color:#0A0A0A;font-weight:600}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;padding:7px 14px;font-weight:500}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#0A0A0A;font-weight:600}
+.btn.small{padding:4px 10px;font-size:12.5px;border-radius:8px}
+.admin-only{display:none}
+body.is-admin .admin-only{display:inline-flex}
+
+.content{padding:28px 32px 60px;max-width:1280px}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:24px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.stat .n{font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.stat .l{font-size:12.5px;color:var(--ink-2);margin-top:4px}
+.stat.hero{border-color:var(--gold);}
+.stat.hero .n{color:var(--gold-ink)}
+.stat.warn{background:var(--red-soft);border-color:transparent}
+.stat.warn .n{color:var(--red)}
+.meter{height:5px;background:var(--line-2);border-radius:99px;margin-top:10px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--gold);border-radius:99px}
+
+/* Toolbar */
+.toolbar{display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.search{flex:1;min-width:220px;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px 14px;color:var(--ink);font-family:inherit;font-size:13.5px}
+.search::placeholder{color:var(--ink-3)}
+
+/* Table */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.panel + .panel{margin-top:16px}
+.panel-h{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.panel-h h3{margin:0;font-size:14.5px;font-weight:600}
+.panel-h .hint{font-size:12px;color:var(--ink-2)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-weight:500;color:var(--ink-3);font-size:12px;padding:10px 18px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 18px;border-bottom:1px solid var(--line-2);vertical-align:middle;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover td{background:var(--line-2)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.est{display:flex;align-items:center;gap:12px}
+.badge{width:34px;height:34px;border-radius:9px;background:var(--gold-soft);color:var(--gold-ink);display:grid;place-items:center;font-weight:600;font-size:11.5px;flex:none}
+.est .nm{font-weight:600}
+.est .mt{font-size:12px;color:var(--ink-2)}
+.bar{width:140px;height:6px;background:var(--line-2);border-radius:99px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:8px}
+.bar i{display:block;height:100%;background:var(--gold)}
+.chip{display:inline-block;font-size:11.5px;font-weight:500;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.chip.red{background:var(--red-soft);color:var(--red)}
+.chip.gold{background:var(--gold-soft);color:var(--gold-ink)}
+.chip.green{background:var(--green-soft);color:var(--green)}
+.chip.grey{background:var(--line-2);color:var(--ink-2)}
+.muted{color:var(--ink-3)}
+.link{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--gold);font-weight:500}
+
+/* Estate header + tabs */
+.ehead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.ehead .big{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.ehead .meta{color:var(--ink-2);font-size:13px;margin-top:4px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
+.tab{border:0;background:transparent;padding:10px 14px;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tab.on{color:var(--ink);border-bottom-color:var(--gold);font-weight:600}
+.grid2{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.kv{padding:6px 18px 14px}
+.kv div{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+.kv div:last-child{border-bottom:0}
+.kv span:first-child{color:var(--ink-2)}
+
+/* Gantt */
+.gantt{padding:8px 18px 18px;overflow-x:auto}
+.g-row{display:grid;grid-template-columns:150px repeat(12,minmax(44px,1fr));align-items:center;min-width:720px}
+.g-row.h div{font-size:11.5px;color:var(--ink-3);padding:8px 0;text-align:center}
+.g-row.h div:first-child{text-align:left}
+.g-row .lab{font-size:13px;padding:10px 0;font-weight:500}
+.g-cell{height:36px;border-left:1px dashed var(--line);position:relative}
+.g-bar{position:absolute;top:10px;height:16px;border-radius:5px;background:var(--gold)}
+.g-bar.alt{background:var(--ink-2)}
+.g-today{position:absolute;top:0;bottom:0;width:2px;background:var(--red);opacity:.6}
+
+/* Reporting frame */
+.frame{height:420px;display:grid;place-items:center;background:repeating-linear-gradient(45deg,var(--line-2) 0 10px,var(--panel) 10px 20px);text-align:center;color:var(--ink-2)}
+.frame .inner{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px 28px;max-width:420px}
+.frame .inner b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+
+/* Docs list */
+.docs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.doc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.doc .t{font-weight:600}
+.doc .d{font-size:12.5px;color:var(--ink-2)}
+.doc .f{font-size:11.5px;color:var(--ink-3);margin-top:auto;padding-top:8px}
+
+.banner{display:flex;gap:10px;align-items:center;background:var(--gold-soft);color:var(--gold-ink);border-radius:10px;padding:10px 14px;font-size:12.5px;margin-bottom:18px}
+.note{font-size:12px;color:var(--ink-3);margin-top:28px}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(10,10,10,.4);display:none;place-items:center;z-index:20;padding:16px}
+.modal-bg.open{display:grid}
+.modal{background:var(--panel);border-radius:14px;padding:22px;width:100%;max-width:460px;border:1px solid var(--line)}
+.modal h3{margin:0 0 4px;font-size:17px}
+.modal p{margin:0 0 16px;color:var(--ink-2);font-size:13px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;font-size:12.5px;color:var(--ink-2)}
+.field input,.field select{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-family:inherit;font-size:13.5px;background:var(--bg);color:var(--ink)}
+.linkbox{display:none;margin-top:6px;background:var(--bg);border:1px dashed var(--gold);border-radius:9px;padding:10px;font-size:12.5px;word-break:break-all}
+.modal .row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+
+@media (max-width:1100px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.docs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .top{position:static;padding:16px 18px;flex-direction:column;align-items:flex-start}
+  .content{padding:20px 18px 48px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid2,.docs{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body class="is-admin">
+<div class="app">
+  <aside class="side" id="side"></aside>
+  <div class="main">
+    <header class="top">
+      <div>
+        <h1 id="title">Overview</h1>
+        <div class="crumb" id="crumb">All estates, budgets, live material and what's due</div>
+      </div>
+      <div class="top-right">
+        <div class="role">Preview as
+          <div class="seg" id="roleSeg">
+            <button data-role="admin" class="on">Admin</button>
+            <button data-role="staff">Sunny staff</button>
+            <button data-role="client">Client</button>
+          </div>
+        </div>
+        <button class="btn admin-only" id="editBtn">Edit page</button>
+      </div>
+    </header>
+    <main class="content" id="content"></main>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal">
+  <div class="modal" role="dialog" aria-labelledby="mTitle">
+    <h3 id="mTitle">Invite a user</h3>
+    <p>They'll get a sign-in link. Access is set by role and estates.</p>
+    <div class="field">Email<input id="mEmail" placeholder="name@lincolnplace.com.au"></div>
+    <div class="field">Role
+      <select id="mRole"><option>Client</option><option>Sunny staff</option><option>Admin</option></select>
+    </div>
+    <div class="field">Estates they can see
+      <select id="mScope"><option>All estates</option><option>QLD estates</option><option>NSW estates</option><option>VIC estates</option><option>Single estate…</option></select>
+    </div>
+    <div class="linkbox" id="mLink"></div>
+    <div class="row">
+      <button class="btn" id="mClose">Close</button>
+      <button class="btn primary" id="mGen">Generate link</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Sample data (placeholder — not real figures) ---------- */
+const ESTATES = [
+  {code:'LLY', name:'Yeppoon', state:'QLD'},
+  {code:'LLMa',name:'Mackay', state:'QLD'},
+  {code:'LLNB',name:'Northern Beaches', state:'QLD', sub:'Townsville'},
+  {code:'LLNR',name:'Northern Rivers', state:'NSW'},
+  {code:'LLM', name:'Moama', state:'NSW'},
+  {code:'LLMS',name:'Mudgee Spring', state:'NSW'},
+  {code:'LLGH',name:'Griffith Hill', state:'NSW'},
+  {code:'LLH', name:'Huntly', state:'VIC'},
+  {code:'LLKF',name:'Kangaroo Flat', state:'VIC'},
+  {code:'LLEG',name:'Eden Gardens', state:'VIC'},
+  {code:'LLB', name:'Baranduda', state:'VIC'},
+];
+const CHANNELS = ['Programmatic','Radio','TV','Press','REA','Meta','OOH'];
+const MONTHS = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'];
+function rng(seed){let s=0;for(const c of seed)s=(s*31+c.charCodeAt(0))>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+ESTATES.forEach(e=>{
+  const r=rng(e.code);
+  e.channels=CHANNELS.map(ch=>{
+    const approved=Math.round((8000+r()*42000)/500)*500;
+    const booked=Math.round(approved*(0.45+r()*0.55)/100)*100;
+    const start=Math.floor(r()*6), len=2+Math.floor(r()*7);
+    return {ch,approved,booked,start,len:Math.min(len,12-start)};
+  }).filter((c,i)=> i<4 || r()>.35);
+  e.approved=e.channels.reduce((a,c)=>a+c.approved,0);
+  e.booked=e.channels.reduce((a,c)=>a+c.booked,0);
+  e.live=2+Math.floor(r()*9);
+  e.due=Math.floor(r()*6);
+  e.overdue=r()>.55?1+Math.floor(r()*3):0;
+  e.edited=['Today','Yesterday','2d ago','4d ago','1 week ago'][Math.floor(r()*5)];
+});
+const fmt=n=>'$'+(n>=1000? (n/1000).toFixed(n>=100000?0:1).replace('.0','')+'k' : n);
+const fmtFull=n=>'$'+n.toLocaleString('en-AU');
+
+/* ---------- State ---------- */
+let role='admin', view={page:'overview'}, estateTab='budget', stateFilter='All';
+
+/* ---------- Sidebar ---------- */
+function renderSide(){
+  const s=document.getElementById('side');
+  const navBtn=(label,page,extra='',active=false)=>`<button class="nav ${active?'active':''}" data-page="${page}" ${extra}>${label}</button>`;
+  let h=`<div class="brand"><div class="wm">Sunny<span>.</span> Lincoln Place</div><div class="sub">Media portal</div></div>`;
+  h+=`<div class="navgroup">
+    ${navBtn('Overview','overview','',view.page==='overview')}
+    ${navBtn('Reporting','reporting','',view.page==='reporting')}
+    ${navBtn('Key dates & contacts','contacts','',view.page==='contacts')}
+  </div>`;
+  h+=`<div class="navgroup"><div class="navhead">States</div>`;
+  ['QLD','NSW','VIC'].forEach(st=>{
+    const es=ESTATES.filter(e=>e.state===st), od=es.some(e=>e.overdue);
+    const act=view.page==='state'&&view.st===st;
+    h+=`<button class="nav ${act?'active':''}" data-page="state" data-st="${st}"><span>${STATE_NAMES[st]}${od?'<i class="dot" aria-label="has overdue items"></i>':''}</span><span class="code">${es.length} estates</span></button>`;
+  });
+  h+=`</div>`;
+  if(role!=='client'){
+    h+=`<div class="navgroup"><div class="navhead">Sunny team <span class="lock">Staff only</span></div>
+      ${navBtn('Processes & SOPs','sops','',view.page==='sops')}
+      ${navBtn('Specs & deadlines','specs','',view.page==='specs')}
+      ${navBtn('Internal notes','notes','',view.page==='notes')}
+    </div>`;
+  }
+  if(role==='admin'){
+    h+=`<div class="navgroup"><div class="navhead">Admin</div>
+      ${navBtn('Users & access','users','',view.page==='users')}
+    </div>`;
+  }
+  s.innerHTML=h;
+  s.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{
+    view={page:b.dataset.page,st:b.dataset.st,est:'All'}; if(view.page==='state')estateTab='budget'; render();
+  });
+}
+
+/* ---------- Pages ---------- */
+function overview(){
+  const list=ESTATES.filter(e=>stateFilter==='All'||e.state===stateFilter);
+  const A=list.reduce((a,e)=>a+e.approved,0), B=list.reduce((a,e)=>a+e.booked,0);
+  const live=list.reduce((a,e)=>a+e.live,0), due=list.reduce((a,e)=>a+e.due,0), od=list.reduce((a,e)=>a+e.overdue,0);
+  let h=`<div class="stats">
+    <div class="stat hero"><div class="n">${fmt(A)}</div><div class="l">Approved FY26 budget</div></div>
+    <div class="stat"><div class="n">${Math.round(B/A*100)}%</div><div class="l">Booked · ${fmt(B)}</div><div class="meter"><i style="width:${B/A*100}%"></i></div></div>
+    <div class="stat"><div class="n">${live}</div><div class="l">Placements live now</div></div>
+    <div class="stat"><div class="n">${due}</div><div class="l">Material due in 14 days</div></div>
+    <div class="stat ${od?'warn':''}"><div class="n">${od}</div><div class="l">Material overdue</div></div>
+  </div>
+  <div class="toolbar">
+    <input class="search" id="q" placeholder="Search estates…" aria-label="Search estates">
+    <div class="seg" id="stSeg">${['All','QLD','NSW','VIC'].map(s=>`<button class="${s===stateFilter?'on':''}" data-s="${s}">${s}</button>`).join('')}</div>
+  </div>
+  <div class="panel"><div class="tbl-wrap"><table>
+    <thead><tr><th>Estate</th><th>Budget booked</th><th class="num">Approved</th><th class="num">Live</th><th>Material</th><th>Reporting</th></tr></thead>
+    <tbody id="rows">${list.map(rowHTML).join('')}</tbody>
+  </table></div></div>`;
+  return h;
+}
+function rowHTML(e){
+  const pct=Math.round(e.booked/e.approved*100);
+  return `<tr class="click" data-code="${e.code}" data-name="${e.name.toLowerCase()}">
+    <td><div class="est"><div class="badge">${e.code}</div><div><div class="nm">${e.name}</div><div class="mt">${e.state}${e.sub?' · '+e.sub:''} · ${e.channels.length} channels · Updated ${e.edited}</div></div></div></td>
+    <td><span class="bar"><i style="width:${pct}%"></i></span><span class="muted">${pct}%</span></td>
+    <td class="num">${fmtFull(e.approved)}</td>
+    <td class="num">${e.live}</td>
+    <td>${e.overdue?`<span class="chip red">${e.overdue} overdue</span> `:''}${e.due?`<span class="chip gold">${e.due} due soon</span>`:''}${!e.overdue&&!e.due?'<span class="chip green">All supplied</span>':''}</td>
+    <td><a class="link" href="#" onclick="event.stopPropagation();return false">Whatagraph</a></td>
+  </tr>`;
+}
+
+const STATE_NAMES={QLD:'Queensland',NSW:'New South Wales',VIC:'Victoria'};
+function statePage(st){
+  const all=ESTATES.filter(e=>e.state===st);
+  const list=view.est&&view.est!=='All'?all.filter(e=>e.code===view.est):all;
+  const tabs=[['budget','Budget'],['plan','Media plan'],['live','Live material'],['due','Material due'],['report','Reporting']];
+  if(role!=='client') tabs.push(['internal','Internal notes']);
+  const od=all.reduce((a,e)=>a+e.overdue,0);
+  let h=`<div class="ehead"><div><div class="big">${STATE_NAMES[st]}</div><div class="meta">${all.length} estates · FY26${od?` · <span class="chip red">${od} overdue</span>`:''}</div></div>
+    <div style="display:flex;gap:8px"><button class="btn small">Download media plans</button><button class="btn small admin-only">Add item</button></div></div>
+    <div class="toolbar"><div class="seg" id="estSeg">${['All',...all.map(e=>e.code)].map(c=>{const e=all.find(x=>x.code===c);return `<button class="${(view.est||'All')===c?'on':''}" data-c="${c}">${e?e.name:'All estates'}</button>`}).join('')}</div></div>
+    <div class="tabs" role="tablist">${tabs.map(([k,l])=>`<button class="tab ${estateTab===k?'on':''}" data-tab="${k}" role="tab">${l}${k==='internal'?' <span class="chip grey">Staff</span>':''}</button>`).join('')}</div>`;
+  h+=({budget:tBudget,plan:tPlan,live:tLive,due:tDue,report:tReport,internal:tInternal})[estateTab](list,st);
+  return h;
+}
+function tBudget(list){
+  const A=list.reduce((a,e)=>a+e.approved,0),B=list.reduce((a,e)=>a+e.booked,0);
+  let rows='';
+  list.forEach(e=>{
+    const p=Math.round(e.booked/e.approved*100);
+    rows+=`<tr style="background:var(--line-2)"><td><b>${e.name}</b> <span class="muted">${e.code}</span></td><td class="num"><b>${fmtFull(e.approved)}</b></td><td class="num"><b>${fmtFull(e.booked)}</b></td><td><span class="bar"><i style="width:${p}%"></i></span><span class="muted">${p}%</span></td><td class="num"><b>${fmtFull(e.approved-e.booked)}</b></td></tr>`;
+    e.channels.forEach(c=>{const q=Math.round(c.booked/c.approved*100);
+      rows+=`<tr><td style="padding-left:34px">${c.ch}</td><td class="num">${fmtFull(c.approved)}</td><td class="num">${fmtFull(c.booked)}</td><td><span class="bar"><i style="width:${q}%"></i></span><span class="muted">${q}%</span></td><td class="num">${fmtFull(c.approved-c.booked)}</td></tr>`});
+  });
+  const byCh={};list.forEach(e=>e.channels.forEach(c=>byCh[c.ch]=(byCh[c.ch]||0)+c.approved));
+  return `<div class="grid2">
+    <div class="panel"><div class="panel-h"><h3>Approved budget by estate</h3><span class="hint">Source: FY26 approved budgets sheet</span></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Estate / channel</th><th class="num">Approved</th><th class="num">Booked</th><th>Progress</th><th class="num">Remaining</th></tr></thead><tbody>${rows}</tbody></table></div></div>
+    <div class="panel"><div class="panel-h"><h3>Summary</h3></div><div class="kv">
+      <div><span>Approved</span><b>${fmtFull(A)}</b></div>
+      <div><span>Booked</span><b>${fmtFull(B)}</b></div>
+      <div><span>Remaining</span><b>${fmtFull(A-B)}</b></div>
+      ${Object.entries(byCh).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div><span>${k}</span><span>${fmtFull(v)}</span></div>`).join('')}
+    </div></div></div>`;
+}
+function tPlan(list){
+  const nowIdx=3.05;
+  let h=`<div class="panel"><div class="panel-h"><h3>FY26 flighting</h3><span class="hint"><span class="chip gold">Booked</span> <span class="chip grey">Proposed</span></span></div><div class="gantt">
+  <div class="g-row h"><div>Estate / channel</div>${MONTHS.map(m=>`<div>${m}</div>`).join('')}</div>`;
+  list.forEach(e=>{
+    h+=`<div class="g-row"><div class="lab" style="font-weight:600;padding-top:16px">${e.name}</div>${'<div></div>'.repeat(12)}</div>`;
+    e.channels.forEach((c,i)=>{
+      h+=`<div class="g-row"><div class="lab" style="font-weight:400;color:var(--ink-2);padding-left:12px">${c.ch}</div>`;
+      for(let m=0;m<12;m++){
+        let inner='';
+        if(m===c.start) inner+=`<div class="g-bar ${c.booked/c.approved<.7&&i%2?'alt':''}" style="left:2px;width:calc(${c.len*100}% - 4px)"></div>`;
+        if(m===Math.floor(nowIdx)) inner+=`<div class="g-today" style="left:${(nowIdx%1)*100}%"></div>`;
+        h+=`<div class="g-cell">${inner}</div>`;
+      }
+      h+=`</div>`;
+    });
+  });
+  return h+`</div></div>`;
+}
+const VENDORS={Programmatic:'StackAdapt',Radio:'ARN',TV:'Seven',Press:'News Corp',REA:'realestate.com.au',Meta:'Meta',OOH:'JCDecaux'};
+const SPECS={Programmatic:'300×250, 728×90, 15s MP4',Radio:'30s script approval',TV:'30s TVC, ClickView',Press:'Half page, 260×180mm',REA:'Hero 1600×900 + copy',Meta:'4:5 + 9:16 static',OOH:'Bus shelter 1200×1800'};
+function tLive(list){
+  const items=[];
+  list.forEach(e=>{const r=rng(e.code+'live');
+    for(let i=0;i<e.live;i++){const c=e.channels[i%e.channels.length];items.push({e:e.name,c:c.ch,v:VENDORS[c.ch],cr:['Lifestyle 30s','Display set A','Open day static','Native carousel','Clubhouse launch','Display set B'][Math.floor(r()*6)],from:`${1+Math.floor(r()*20)} Sep`,to:`${1+Math.floor(r()*28)} ${['Oct','Nov','Dec'][Math.floor(r()*3)]}`})}});
+  return `<div class="panel"><div class="panel-h"><h3>Live now · ${items.length} placements</h3><span class="hint">Source: live material tracker</span></div><div class="tbl-wrap"><table>
+  <thead><tr><th>Estate</th><th>Creative</th><th>Channel</th><th>Vendor</th><th>Live</th><th>Status</th><th></th></tr></thead><tbody>
+  ${items.map(x=>`<tr><td><b style="font-weight:500">${x.e}</b></td><td>${x.cr}</td><td>${x.c}</td><td class="muted">${x.v}</td><td>${x.from} – ${x.to}</td><td><span class="chip green">Live</span></td><td><a class="link" href="#" onclick="return false">Preview</a></td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+function tDue(list){
+  const rows=[];
+  list.forEach(e=>{const r=rng(e.code+'due');
+    const add=(st,lab,d,sort)=>{const c=e.channels[Math.floor(r()*e.channels.length)].ch;rows.push({e:e.name,st,lab,d,sort,c,by:r()>.5?'Lincoln Place':'Sunny'})};
+    for(let i=0;i<e.overdue;i++) add('red','Overdue',`${20+i} Sep`,20+i);
+    for(let i=0;i<e.due;i++) add('gold','Due soon',`${6+i*2} Oct`,36+i*2);
+  });
+  rows.sort((a,b)=>a.sort-b.sort);
+  return `<div class="panel"><div class="panel-h"><h3>Material due</h3><span class="hint">Source: master specs sheet</span></div><div class="tbl-wrap"><table>
+  <thead><tr><th>Due</th><th>Estate</th><th>Placement</th><th>Specs</th><th>Supplied by</th><th>Status</th></tr></thead><tbody>
+  ${rows.length?rows.map(x=>`<tr><td><b style="font-weight:500">${x.d}</b></td><td>${x.e}</td><td>${x.c} · ${VENDORS[x.c]}</td><td class="muted">${SPECS[x.c]}</td><td>${x.by}</td><td><span class="chip ${x.st}">${x.lab}</span></td></tr>`).join(''):`<tr><td colspan="6" class="muted">Nothing due. All material is supplied.</td></tr>`}
+  </tbody></table></div></div>`;
+}
+function tReport(list,st){
+  const label=list.length===1?list[0].name:STATE_NAMES[st];
+  return `<div class="panel"><div class="panel-h"><h3>${label} performance</h3><a class="link" href="#" onclick="return false">Open in Whatagraph</a></div>
+  <div class="frame"><div class="inner"><b>Whatagraph dashboard embeds here</b>${list.length===1?`Filtered to ${label}.`:`All ${label} estates, with an estate filter inside the dashboard.`}</div></div></div>`;
+}
+function tInternal(list,st){
+  return `<div class="banner">Only Sunny staff can see this tab.</div>
+  <div class="panel"><div class="panel-h"><h3>${STATE_NAMES[st]} notes</h3><span class="hint">Last edit by Lily · 2d ago</span></div><div class="kv">
+    <div><span>Client contact</span><span>${st} marketing manager</span></div>
+    <div><span>Material workflow</span><span>${st==='NSW'?'Master specs → Trello':'Master specs → '+st+' client sheet'}</span></div>
+    <div><span>Watch-outs</span><span>Open day creative needs 5 business days</span></div>
+  </div></div>
+  <div class="panel"><div class="panel-h"><h3>Estate references</h3></div><div class="tbl-wrap"><table>
+  <thead><tr><th>Estate</th><th>Code</th><th>StackAdapt group</th><th>Trello</th></tr></thead><tbody>
+  ${list.map(e=>`<tr><td>${e.name}</td><td class="muted">${e.code}</td><td>${e.code}_FY26</td><td><a class="link" href="#" onclick="return false">Board</a></td></tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+function reporting(){
+  return `<div class="panel"><div class="panel-h"><h3>Account-wide performance</h3><a class="link" href="#" onclick="return false">Open in Whatagraph</a></div>
+  <div class="frame"><div class="inner"><b>Portfolio Whatagraph dashboard</b>All estates combined. Each estate page also has its own filtered view.</div></div></div>
+  <div class="panel"><div class="panel-h"><h3>Post-campaign reports</h3></div><div class="tbl-wrap"><table>
+  <thead><tr><th>Report</th><th>Period</th><th>Estates</th><th></th></tr></thead><tbody>
+  <tr><td>FY26 programmatic PCR · Q1</td><td>Jul – Sep 2026</td><td>All</td><td><a class="link" href="#" onclick="return false">View</a></td></tr>
+  <tr><td>ARN radio post-analysis</td><td>Aug 2026</td><td>QLD</td><td><a class="link" href="#" onclick="return false">View</a></td></tr>
+  <tr><td>Seven Network post analysis</td><td>Jun 2026</td><td>All</td><td><a class="link" href="#" onclick="return false">View</a></td></tr>
+  </tbody></table></div></div>`;
+}
+function contacts(){
+  return `<div class="grid2"><div class="panel"><div class="panel-h"><h3>Key dates</h3></div><div class="tbl-wrap"><table>
+  <thead><tr><th>Date</th><th>What</th><th>Estates</th></tr></thead><tbody>
+  <tr><td><b style="font-weight:500">10 Oct</b></td><td>Spring open day material deadline</td><td>All</td></tr>
+  <tr><td><b style="font-weight:500">18 Oct</b></td><td>Spring open day weekend</td><td>All</td></tr>
+  <tr><td><b style="font-weight:500">1 Nov</b></td><td>Q2 budget review</td><td>All</td></tr>
+  <tr><td><b style="font-weight:500">20 Dec</b></td><td>Christmas media freeze</td><td>All</td></tr>
+  </tbody></table></div></div>
+  <div class="panel"><div class="panel-h"><h3>Your Sunny team</h3></div><div class="kv">
+    <div><span>Account lead</span><span>Name · email</span></div>
+    <div><span>Media coordinator</span><span>Lily Hunter</span></div>
+    <div><span>Reporting</span><span>Name · email</span></div>
+  </div></div></div>`;
+}
+function docsPage(title,items){
+  return `<div class="banner">Sunny staff only. Clients never see this section.</div>
+  <div class="docs">${items.map(([t,d,f])=>`<div class="doc"><div class="t">${t}</div><div class="d">${d}</div><div class="f">${f}</div></div>`).join('')}</div>`;
+}
+function sops(){return docsPage('Processes',[
+  ['Monthly reporting process','Pulling StackAdapt, Meta and REA data, Whatagraph refresh, client send-out.','Updated 12 Sep'],
+  ['New material workflow','From brief to master specs sheet to Trello to vendor.','Updated 2 Sep'],
+  ['Budget approval steps','How approvals are requested, recorded and reflected in this portal.','Updated 28 Aug'],
+  ['Radio flighting','Turning the ARN contract into the weekly schedule.','Updated 20 Aug'],
+  ['ATL bonus tracker','Logging added value across radio, TV, press and programmatic.','Updated 15 Aug'],
+  ['Onboarding a new estate','Codes, campaign groups, sheets and portal setup.','Updated 1 Aug'],
+])}
+function specs(){return docsPage('Specs',[
+  ['Master specs sheet','The source of truth for material due. Feeds Trello and state sheets.','Google Sheets'],
+  ['Programmatic specs','StackAdapt display, native, BVOD and DOOH sizes.','Updated 5 Sep'],
+  ['REA profile guidelines','Hero, gallery and copy specs across estate profiles.','Updated 22 Aug'],
+])}
+function notes(){return docsPage('Notes',[
+  ['Account notes','Relationship context, preferences, sensitivities.','Updated 2d ago'],
+  ['Handover notes','Cover notes for leave periods.','Updated 30 Sep'],
+  ['Vendor contacts','ARN, Seven, News Corp, JCDecaux, REA reps.','Updated 10 Sep'],
+])}
+function users(){
+  const U=[['Lily Hunter','lily@sunnyadvertising.com.au','Admin','All estates','Active'],
+    ['Sunny team member','name@sunnyadvertising.com.au','Sunny staff','All estates','Active'],
+    ['QLD marketing contact','qld@client.com.au','Client','QLD estates','Active'],
+    ['NSW marketing contact','nsw@client.com.au','Client','NSW estates','Invited'],
+    ['VIC marketing contact','vic@client.com.au','Client','VIC estates','Active'],
+    ['Head of marketing','marketing@client.com.au','Client','All estates','Active']];
+  return `<div class="toolbar"><input class="search" placeholder="Search users…" aria-label="Search users"><button class="btn primary" id="invite">Invite user</button></div>
+  <div class="panel"><div class="tbl-wrap"><table>
+  <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Can see</th><th>Status</th><th></th></tr></thead><tbody>
+  ${U.map(u=>`<tr><td><b style="font-weight:500">${u[0]}</b></td><td class="muted">${u[1]}</td><td><span class="chip ${u[2]==='Client'?'grey':'gold'}">${u[2]}</span></td><td>${u[3]}</td><td><span class="chip ${u[4]==='Active'?'green':'gold'}">${u[4]}</span></td><td><button class="btn small">Resend link</button></td></tr>`).join('')}
+  </tbody></table></div></div>
+  <p class="note">Admins edit content. Sunny staff see everything, including the Sunny team section. Clients see only the estates assigned to them.</p>`;
+}
+
+/* ---------- Render ---------- */
+const META={overview:['Overview',"All estates, budgets, live material and what's due"],reporting:['Reporting','Dashboards and post-campaign reports'],contacts:['Key dates & contacts','Deadlines and your Sunny team'],sops:['Processes & SOPs','How we run the Lincoln Place account'],specs:['Specs & deadlines','Material specs and the master specs sheet'],notes:['Internal notes','Account context for the Sunny team'],users:['Users & access','Invite people and control what they can see']};
+function render(){
+  if((view.page==='users'&&role!=='admin')||(['sops','specs','notes'].includes(view.page)&&role==='client')) view={page:'overview'};
+  if(estateTab==='internal'&&role==='client') estateTab='budget';
+  document.body.classList.toggle('is-admin',role==='admin');
+  renderSide();
+  const c=document.getElementById('content');
+  if(view.page==='state'){
+    document.getElementById('title').textContent=STATE_NAMES[view.st];
+    const e=ESTATES.find(x=>x.code===view.est);
+    document.getElementById('crumb').textContent=e?`${STATE_NAMES[view.st]} / ${e.name}`:`All ${view.st} estates`;
+    c.innerHTML=statePage(view.st);
+    c.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{estateTab=t.dataset.tab;render()});
+    c.querySelectorAll('#estSeg button').forEach(b=>b.onclick=()=>{view.est=b.dataset.c;render()});
+  } else {
+    const [t,s]=META[view.page]; document.getElementById('title').textContent=t; document.getElementById('crumb').textContent=s;
+    c.innerHTML=({overview,reporting,contacts,sops,specs,notes,users})[view.page]();
+  }
+  c.querySelectorAll('tr.click').forEach(r=>r.onclick=()=>{const e=ESTATES.find(x=>x.code===r.dataset.code);view={page:'state',st:e.state,est:e.code};estateTab='budget';render();window.scrollTo(0,0)});
+  const st=document.getElementById('stSeg'); if(st) st.querySelectorAll('button').forEach(b=>b.onclick=()=>{stateFilter=b.dataset.s;render()});
+  const q=document.getElementById('q'); if(q) q.oninput=()=>{const v=q.value.toLowerCase();document.querySelectorAll('#rows tr').forEach(r=>r.style.display=r.dataset.name.includes(v)||r.dataset.code.toLowerCase().includes(v)?'':'none')};
+  const inv=document.getElementById('invite'); if(inv) inv.onclick=openModal;
+}
+document.querySelectorAll('#roleSeg button').forEach(b=>b.onclick=()=>{
+  role=b.dataset.role; document.querySelectorAll('#roleSeg button').forEach(x=>x.classList.toggle('on',x===b)); render();
+});
+document.getElementById('editBtn').onclick=()=>alert('In the real build, admins edit page content here. Clients and staff never see this button.');
+const modal=document.getElementById('modal');
+function openModal(){modal.classList.add('open');document.getElementById('mLink').style.display='none';document.getElementById('mEmail').focus()}
+document.getElementById('mClose').onclick=()=>modal.classList.remove('open');
+modal.onclick=e=>{if(e.target===modal)modal.classList.remove('open')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('open')});
+document.getElementById('mGen').onclick=()=>{
+  const l=document.getElementById('mLink');
+  const tok=Math.random().toString(36).slice(2,10)+Math.random().toString(36).slice(2,8);
+  l.innerHTML=`<b style="color:var(--ink)">Sign-in link</b><br>https://lincoln.sunnyadvertising.com.au/join/${tok}<br><span class="muted">${document.getElementById('mRole').value} · ${document.getElementById('mScope').value} · expires in 7 days</span>`;
+  l.style.display='block';
+};
+render();
+</script>
+</body>
+</html>
