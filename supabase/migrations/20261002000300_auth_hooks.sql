@@ -3,9 +3,10 @@
 -- There is no public sign-up. An admin creates an invite (email, role, scope);
 -- the server action then creates the auth user, and the trigger below turns the
 -- invite into a profile + scope rows. An auth user without a profile has no access.
+-- Safe to re-run.
 
 -- Applies an invite to a user: upserts the profile and replaces their scopes.
-create function public.apply_invite(p_invite_id uuid, p_user_id uuid) returns void
+create or replace function public.apply_invite(p_invite_id uuid, p_user_id uuid) returns void
 language plpgsql security definer
 set search_path = ''
 as $$
@@ -49,7 +50,7 @@ revoke execute on function public.apply_invite(uuid, uuid) from public, anon, au
 grant execute on function public.apply_invite(uuid, uuid) to service_role;
 
 -- New auth user: apply their most recent open invite, if any.
-create function public.handle_new_auth_user() returns trigger
+create or replace function public.handle_new_auth_user() returns trigger
 language plpgsql security definer
 set search_path = ''
 as $$
@@ -71,12 +72,13 @@ begin
 end;
 $$;
 
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_auth_user();
 
 -- First sign-in marks the invite accepted; every sign-in is mirrored for the Users page.
-create function public.handle_auth_sign_in() returns trigger
+create or replace function public.handle_auth_sign_in() returns trigger
 language plpgsql security definer
 set search_path = ''
 as $$
@@ -88,6 +90,7 @@ begin
 end;
 $$;
 
+drop trigger if exists on_auth_user_signed_in on auth.users;
 create trigger on_auth_user_signed_in
   after update of last_sign_in_at on auth.users
   for each row
