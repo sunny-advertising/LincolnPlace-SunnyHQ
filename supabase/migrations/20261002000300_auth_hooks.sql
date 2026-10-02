@@ -11,7 +11,7 @@ language plpgsql security definer
 set search_path = ''
 as $$
 declare
-  inv public.invites;
+  inv record;
   sc jsonb;
 begin
   select * into inv from public.invites where id = p_invite_id;
