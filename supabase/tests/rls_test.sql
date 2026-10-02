@@ -8,9 +8,11 @@ create schema tests;
 grant usage on schema tests to authenticated, anon;
 
 create function tests.login(p_email text) returns void language plpgsql security definer as $$
+declare uid uuid := (select id from auth.users where email = p_email);
 begin
-  perform set_config('request.jwt.claims',
-    json_build_object('sub', (select id from auth.users where email = p_email), 'role', 'authenticated')::text, true);
+  -- Newer auth.uid() reads request.jwt.claims, older images read request.jwt.claim.sub; set both.
+  perform set_config('request.jwt.claims', json_build_object('sub', uid, 'role', 'authenticated')::text, true);
+  perform set_config('request.jwt.claim.sub', coalesce(uid::text, ''), true);
 end $$;
 
 create function tests.eq(label text, got bigint, expected bigint) returns text language plpgsql as $$
@@ -66,10 +68,10 @@ select 'yeppoon@client.test', 'client', lp, json_build_array(json_build_object('
 select 'disabled@client.test', 'client', lp, '[{"region_id":null,"estate_id":null}]'::jsonb from ids union all
 select 'ohq@client.test', 'client', ohq, '[{"region_id":null,"estate_id":null}]'::jsonb from ids;
 
-insert into auth.users (email) values
+insert into auth.users (id, email) select gen_random_uuid(), e from (values
   ('lily@sunnyadvertising.com.au'), ('staff@sunny.test'), ('all@client.test'),
   ('qld@client.test'), ('yeppoon@client.test'), ('disabled@client.test'),
-  ('ohq@client.test'), ('stranger@nowhere.test');
+  ('ohq@client.test'), ('stranger@nowhere.test')) as v(e);
 
 update public.profiles set disabled_at = now() where email = 'disabled@client.test';
 
